@@ -3,4 +3,8 @@ project(untitled1)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(untitled1 main.cpp Tree.h)
+#add_executable(untitled1 main.cpp Tree.h)
+
+#add_executable(untitled1 TreeTest.cpp Tree.h TreeTest.h)
+
+add_executable(untitled1 TreeTest.cpp Tree.h TreeTest.h main.cpp)

@@ -61,8 +61,7 @@ private:
         return (a > b)? a : b;
     }
 
-    Node *RightRotate(Node *y)
-    {
+    Node *RightRotate(Node *y) {
         Node *x = y->left;
         Node *T2 = x->right;
 
@@ -79,11 +78,9 @@ private:
         // Return new root
         return x;
     }
-    Node *LeftRotate(Node *x)
-    {
+    Node *LeftRotate(Node *x) {
         Node *y = x->right;
         Node *T2 = y->left;
-
         // Perform rotation
         y->left = x;
         x->right = T2;
@@ -121,18 +118,6 @@ protected:
         // node->value = temp;
         if (node->left) Mapping(mapper, node->left, tree);
         if (node->right) Mapping(mapper, node->right, tree);
-    }
-
-    void Mapping(std::function<T(T)> const & mapper, Node* node, Tree<T>* tree){
-        if (mapper == nullptr)
-            throw std::invalid_argument("mapper is NULL");
-        // auto temp = mapper(node->value);
-        if(node) {
-            tree->Append(mapper(node->value));
-            // node->value = temp;
-            if (node->left) Mapping(mapper, node->left, tree);
-            if (node->right) Mapping(mapper, node->right, tree);
-        }
     }
 
     void WherePath(bool(*predicate)(T), Node* node, Tree<T> *tree){
@@ -190,6 +175,10 @@ public:
         return root;
     }
 
+    void setRoot(Node* node) {
+        root = node;
+    }
+
     void Append(T value){
         if(&value == nullptr){
             throw std::range_error("You cant append NULL");
@@ -197,58 +186,46 @@ public:
         root = Insert(root, value);
     }
 
-    Node* Insert(Node* node, T value)
-    {
-        /* 1. Perform the normal BST insertion */
+    Node* Insert(Node* node, T value) {
         if (node == NULL)
             return(new Node(value));
+        if (value < node->value)
+            node->left = Insert(node->left, value);
+        else if (value > node->value)
+            node->right = Insert(node->right, value);
+        else
+            return node;
+        node->height = 1 + max(height(node->left),
+                               height(node->right));
+        return node;
+    }
 
+    Node* BalancedInsert(Node* node, T value) {
+        if (node == NULL)
+            return(new Node(value));
         if (value < node->value)
             node->left = Insert(node->left, value);
         else if (value > node->value)
             node->right = Insert(node->right, value);
         else // Equal keys are not allowed in BST
             return node;
-
-        /* 2. Update height of this ancestor node */
-        node->height = 1 + max(height(node->left),
-                               height(node->right));
-
-        /* 3. Get the balance factor of this ancestor
-            node to check whether this node became
-            unbalanced */
-        //int balance = GetBalance(node);
-
-        // If this node becomes unbalanced, then
-        // there are 4 cases
-
-        // Left Left Case
-        //if (balance > 1 && value < node->left->value)
-            //return RightRotate(node);
-
-        // Right Right Case
-        //if (balance < -1 && value > node->right->value)
-            //return LeftRotate(node);
-
-        // Left Right Case
-        //if (balance > 1 && value > node->left->value)
-        //{
-            //node->left = LeftRotate(node->left);
-            //return RightRotate(node);
-        //}
-
-        // Right Left Case
-        //if (balance < -1 && value < node->right->value)
-        //{
-            //node->right = RightRotate(node->right);
-            //return LeftRotate(node);
-        //}
-
-        /* return the (unchanged) node pointer */
+        node->height = 1 + max(height(node->left), height(node->right));
+        int balance = GetBalance(node);
+        if (balance > 1 && value < node->left->value) { return RightRotate(node); }
+        if (balance < -1 && value > node->right->value) { return LeftRotate(node); }
+        if (balance > 1 && value > node->left->value) {
+            node->left = LeftRotate(node->left);
+            return RightRotate(node);
+        }
+        if (balance < -1 && value < node->right->value) {
+            node->right = RightRotate(node->right);
+            return LeftRotate(node);
+        }
         return node;
     }
+
     Node* Remove(T value){
-        if(&value == nullptr || !root){
+        if (&value == nullptr || !root){
             throw std::range_error("You cant remove NULL");
         }
         return Delete(&root, value);
@@ -286,7 +263,7 @@ public:
     }
 
     bool Search(T value){
-        if(&value == nullptr || !root){
+        if(&value == nullptr || !root) {
             throw std::range_error("You cant search NULL");
         }
         Node** current = &root;
@@ -308,7 +285,7 @@ public:
     }
 
     T* GetValue(T value){
-        if(&value == nullptr || !root){
+        if (&value == nullptr || !root) {
             throw std::range_error("You cant search NULL");
         }
         Node* current = root;
@@ -327,7 +304,6 @@ public:
                 }
             }
         }
-        // throw std::range_error("This value does not exists in tree");
         return nullptr;
     }
 
@@ -357,7 +333,7 @@ public:
             if(value < node.value){
                 current = &node.left;
             }
-            else{
+            else {
                 if(value > node.value){
                     current = &node.right;
                 }
@@ -405,48 +381,26 @@ public:
     }
 
     template<class T1>
-    Tree<T1>* Map(T1(*mapper)(T)){
+    Tree<T1>* Map(T1(*mapper)(T)) {
         if (mapper == nullptr)
             throw std::invalid_argument("mapper is NULL");
         auto* newTree = new Tree<T1>();
         Mapping(mapper, this->root, newTree);
         return newTree;
     }
-
-    Tree<T> Map(std::function<T(T)> const & mapper){
-        if (mapper == nullptr)
-            throw std::invalid_argument("mapper is NULL");
-        Tree<T> newTree = Tree<T>();
-        Mapping(mapper, this->root, &newTree);
-        return newTree;
-    }
-    Tree<T>* Where(bool(*predicate)(T)){
+    Tree<T>* Where(bool(*predicate)(T)) {
         if (predicate == nullptr)
             throw std::invalid_argument("predicate is NULL");
         auto* newTree = new Tree<T>();
         WherePath(predicate, this->root, newTree);
         return newTree;
     }
-    Tree<T> Where(std::function<bool(T)> const & predicate){
-        if (predicate == nullptr)
-            throw std::invalid_argument("predicate is NULL");
-        Tree<T> newTree = Tree<T>();
-        WherePath(predicate, this->root, &newTree);
-        return newTree;
-    }
-    T Reduce(T(*reducer)(T, T), T const &c){
+    T Reduce(T(*reducer)(T, T), T const &c) {
         if (reducer == nullptr)
             throw std::invalid_argument("reducer is NULL");
         T res = ReducePath(reducer, c, root);
         return res;
     }
-    T Reduce(std::function<T(T, T)> const & reducer, T const &c){
-        if (reducer == nullptr)
-            throw std::invalid_argument("reducer is NULL");
-        T res = ReducePath(reducer, c, root);
-        return res;
-    }
-
     Tree<T> &operator=(const Tree<T> &tree){
         if(&tree != this && tree.root != nullptr) {
             DestroyNode(root);
@@ -455,10 +409,8 @@ public:
         return *this;
     }
 
-    void PreOrder(Node *node, int ctr)
-    {
-        if(node != nullptr)
-        {
+    void PreOrder(Node *node, int ctr) {
+        if(node != nullptr) {
             std::string brackets[] = {"{", "}", "(", ")", "[", "]"};
             std::cout << brackets[ctr] << node->value << " ";
             PreOrder(node->left, (ctr + 2) % 6);
