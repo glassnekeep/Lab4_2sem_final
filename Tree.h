@@ -186,6 +186,10 @@ public:
         DestroyNode(root);
     }
 
+    Node* getRoot() {
+        return root;
+    }
+
     void Append(T value){
         if(&value == nullptr){
             throw std::range_error("You cant append NULL");
@@ -401,11 +405,11 @@ public:
     }
 
     template<class T1>
-    Tree<T1> Map(T1(*mapper)(T)){
+    Tree<T1>* Map(T1(*mapper)(T)){
         if (mapper == nullptr)
             throw std::invalid_argument("mapper is NULL");
-        Tree<T1> newTree = Tree<T1>();
-        Mapping(mapper, this->root, &newTree);
+        auto* newTree = new Tree<T1>();
+        Mapping(mapper, this->root, newTree);
         return newTree;
     }
 
@@ -416,11 +420,11 @@ public:
         Mapping(mapper, this->root, &newTree);
         return newTree;
     }
-    Tree<T> Where(bool(*predicate)(T)){
+    Tree<T>* Where(bool(*predicate)(T)){
         if (predicate == nullptr)
             throw std::invalid_argument("predicate is NULL");
-        Tree<T> newTree = Tree<T>();
-        WherePath(predicate, this->root, &newTree);
+        auto* newTree = new Tree<T>();
+        WherePath(predicate, this->root, newTree);
         return newTree;
     }
     Tree<T> Where(std::function<bool(T)> const & predicate){
@@ -531,16 +535,20 @@ public:
         if (tree == nullptr) {
             return nullptr;
         }
-        *result = result + to_string(tree -> value);
+        *result = *result + to_string(tree -> value);
         if (tree -> left != nullptr) {
             *result += "(";
             IntoString(tree -> left, result);
             *result += ")";
+        } else {
+            *result += "()";
         }
         if (tree -> right != nullptr) {
             *result += "(";
             IntoString(tree -> right, result);
             *result += ")";
+        } else {
+            *result += "()";
         }
         return result;
     }
