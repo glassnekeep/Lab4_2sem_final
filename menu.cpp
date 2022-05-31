@@ -35,13 +35,11 @@ void menu() {
                     "5) Print the tree;\n"
                     "6) Check the element;\n"
                     "7) Check the sub tree;\n"
-                    "8) Balance the tree;\n"
-                    "9) Map (multiply by two function);\n"
-                    "10) Where (% 2 == 0 function);\n"
-                    "11) Reduce (+ element * 3 function);\n"
-                    "12) Print the tree to string;\n"
-                    "13) Read the tree from string;\n"
-                    "14) Balanced insert;\n"
+                    "8) Map (multiply by two function);\n"
+                    "9) Where (% 2 == 0 function);\n"
+                    "10) Print the tree to string;\n"
+                    "11) Read the tree from string;\n"
+                    "12) Balanced insert;\n"
                     "0) Exit the menu;\n" << endl;
             cin >> input;
             switch (input) {
@@ -147,34 +145,25 @@ void menu() {
                     break;
                 }
                 case 8: {
-                    //TODO Balance
-                    break;
-                }
-                case 9: {
                     Tree<int>* mapTree = tree -> Map(multiply);
                     cout << "Mapped tree:" << endl;
                     mapTree -> printOutput();
                     break;
                 }
-                case 10: {
+                case 9: {
                     Tree<int>* whereTree = tree -> Where(isEven);
                     cout << "Where tree made" << endl;
                     whereTree -> printOutput();
                     break;
                 }
-                case 11: {
-                    //TODO Reduce
-                    //Tree<int>* reduceTree = tree -> Reduce(reducer, 0);
-                    break;
-                }
-                case 12: {
-                    cout << "Written the tree to string" << endl;
+                case 10: {
+                    cout << "Write the tree to string" << endl;
                     string line;
                     string* newString = tree -> IntoString(tree -> getRoot(), &line);
                     cout << *newString << endl;
                     break;
                 }
-                case 13: {
+                case 11: {
                     string treeString;
                     cout << "Enter the string please" << endl;
                     cin >> treeString;
@@ -184,7 +173,7 @@ void menu() {
                     treeFromString -> printOutput();
                     break;
                 }
-                case 14: {
+                case 12: {
                     int s;
                     int n;
                     cout << "Number of elements in the tree: " << endl;
