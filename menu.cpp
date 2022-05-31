@@ -7,6 +7,10 @@
 
 using namespace std;
 
+int reducer(int a, int b) {
+    return a + b * 2;
+}
+
 int multiply(int a) {
     return a * 2;
 }
@@ -160,6 +164,7 @@ void menu() {
                 }
                 case 11: {
                     //TODO Reduce
+                    //Tree<int>* reduceTree = tree -> Reduce(reducer, 0);
                     break;
                 }
                 case 12: {

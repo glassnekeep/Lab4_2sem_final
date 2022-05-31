@@ -113,7 +113,7 @@ protected:
         if(node->right) WherePath(predicate, node->right, tree);
     }
 
-    T ReducePath(T(*reducer)(T, T), T const& c, Node* node){
+    /*T ReducePath(T(*reducer)(T, T), T const& c, Node* node){
         if(node){
             T res = reducer(node->value, c);
             res = ReducePath(reducer, res, node->left);
@@ -121,7 +121,7 @@ protected:
             return res;
         }
         return c;
-    }
+    }*/
 public:
     Tree(){
         root = nullptr;
@@ -383,12 +383,12 @@ public:
         WherePath(predicate, this->root, newTree);
         return newTree;
     }
-    T Reduce(T(*reducer)(T, T), T const &c) {
+    /*T Reduce(T(*reducer)(T, T), T const &c) {
         if (reducer == nullptr)
             throw std::invalid_argument("reducer is NULL");
         T res = ReducePath(reducer, c, root);
         return res;
-    }
+    }*/
     Tree<T> &operator=(const Tree<T> &tree){
         if(&tree != this && tree.root != nullptr) {
             DestroyNode(root);
