@@ -49,32 +49,24 @@ private:
         }
     }
 
-    int height(Node *N)
-    {
-        if (N == NULL)
-            return 0;
-        return N->height;
+    int height(Node *N) {
+        if (N == NULL) { return 0; }
+        return N -> height;
     }
 
-    int max(int a, int b)
-    {
+    int max(int a, int b) {
         return (a > b)? a : b;
     }
 
     Node *RightRotate(Node *y) {
         Node *x = y->left;
         Node *T2 = x->right;
-
         // Perform rotation
         x->right = y;
         y->left = T2;
-
         // Update heights
-        y->height = max(height(y->left),
-                        height(y->right)) + 1;
-        x->height = max(height(x->left),
-                        height(x->right)) + 1;
-
+        y->height = max(height(y -> left),height(y -> right)) + 1;
+        x->height = max(height(x -> left),height(x -> right)) + 1;
         // Return new root
         return x;
     }
@@ -82,33 +74,26 @@ private:
         Node *y = x->right;
         Node *T2 = y->left;
         // Perform rotation
-        y->left = x;
-        x->right = T2;
-
+        y -> left = x;
+        x -> right = T2;
         // Update heights
-        x->height = max(height(x->left),
-                        height(x->right)) + 1;
-        y->height = max(height(y->left),
-                        height(y->right)) + 1;
-
+        x -> height = max(height(x -> left),height(x -> right)) + 1;
+        y -> height = max(height(y -> left),height(y -> right)) + 1;
         // Return new root
         return y;
     }
-    int GetBalance(Node *N)
-    {
+    int GetBalance(Node *N) {
         if (N == NULL)
             return 0;
         return height(N->left) - height(N->right);
     }
 
-    Node* FindMin(Node* node)
-    {
-        while(node->left != NULL) node = node->left;
+    Node* FindMin(Node* node) {
+        while (node -> left != nullptr) { node = node -> left; }
         return node;
     }
 protected:
     Node* root;
-
     template<class T1>
     void Mapping(T1(*mapper)(T), Node* node, Tree<T>* tree){
         if (mapper == nullptr)
@@ -186,6 +171,13 @@ public:
         root = Insert(root, value);
     }
 
+    void AppendBalanced(T value) {
+        if (&value == nullptr) {
+            throw std::range_error("You cannot append NULL");
+        }
+        root = BalancedInsert(root, value);
+    }
+
     Node* Insert(Node* node, T value) {
         if (node == NULL)
             return(new Node(value));
@@ -234,14 +226,11 @@ public:
         if(*node == nullptr) return *node;
         else if(value < (*node)->value) (*node)->left = Delete(&(*node)->left, value);
         else if (value > (*node)->value) (*node)->right = Delete(&(*node)->right, value);
-            // Wohoo... I found you, Get ready to be deleted
         else {
-            // Case 1:  No child
             if((*node)->left == nullptr && (*node)->right == nullptr) {
                 delete *node;
                 *node = nullptr;
             }
-                //Case 2: One child
             else if((*node)->left == NULL) {
                 struct Node *temp = *node;
                 *node = (*node)->right;
@@ -252,7 +241,6 @@ public:
                 *node = (*node)->left;
                 delete temp;
             }
-                // case 3: 2 children
             else {
                 Node *temp = FindMin((*node)->right);
                 (*node)->value = temp->value;

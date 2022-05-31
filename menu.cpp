@@ -37,6 +37,7 @@ void menu() {
                     "11) Reduce (+ element * 3 function);\n"
                     "12) Print the tree to string;\n"
                     "13) Read the tree from string;\n"
+                    "14) Balanced insert;\n"
                     "0) Exit the menu;\n" << endl;
             cin >> input;
             switch (input) {
@@ -110,7 +111,7 @@ void menu() {
                 case 5: {
                     cout << "Binary tree: " << endl;
                     tree -> printOutput();
-                    tree -> Output();
+                    //tree -> Output();
                     break;
                 }
                 case 6: {
@@ -172,10 +173,22 @@ void menu() {
                     string treeString;
                     cout << "Enter the string please" << endl;
                     cin >> treeString;
-                    Tree<int>* treeFromString = new Tree<int>();
+                    auto* treeFromString = new Tree<int>();
                     int start = 0;
                     treeFromString -> setRoot(tree -> fromString(treeString, &start));
                     treeFromString -> printOutput();
+                    break;
+                }
+                case 14: {
+                    int s;
+                    int n;
+                    cout << "Number of elements in the tree: " << endl;
+                    cin >> n;
+                    for (int i = 0; i < n; ++i) {
+                        cout << "Enter value" << endl;
+                        cin >> s;
+                        tree -> AppendBalanced(s);
+                    }
                     break;
                 }
                 case 0: {
